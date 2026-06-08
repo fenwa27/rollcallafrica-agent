@@ -12,9 +12,12 @@ export async function getProfileIds() {
   const res = await fetch(
     `${BUFFER_API}/profiles.json?access_token=${process.env.BUFFER_ACCESS_TOKEN}`
   );
-  const profiles = await res.json();
+ const profiles = await res.json();
+  if (!Array.isArray(profiles)) {
+    console.warn('⚠️  Buffer API unexpected response:', JSON.stringify(profiles));
+    return [];
+  }
   return profiles.map((p) => ({
-    id: p.id,
     service: p.service, // "twitter", "linkedin", "instagram", etc.
     handle: p.service_username,
   }));
