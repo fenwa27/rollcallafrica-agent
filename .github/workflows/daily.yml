@@ -1,0 +1,46 @@
+name: Daily Agent Run
+
+on:
+  schedule:
+    # 9am Lagos time = 8am UTC (WAT is UTC+1)
+    - cron: '0 8 * * *'
+  workflow_dispatch: # lets you trigger manually from GitHub UI
+
+jobs:
+  run-agents:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Traffic Agent (Social + SEO + Community + Outreach)
+        env:
+          ANTHROPIC_API_KEY:            ${{ secrets.ANTHROPIC_API_KEY }}
+          RSS_FEED_URL:                 ${{ secrets.RSS_FEED_URL }}
+          SITE_NAME:                    ${{ secrets.SITE_NAME }}
+          SITE_URL:                     ${{ secrets.SITE_URL }}
+          BUFFER_ACCESS_TOKEN:          ${{ secrets.BUFFER_ACCESS_TOKEN }}
+          WORDPRESS_API_URL:            ${{ secrets.WORDPRESS_API_URL }}
+          WP_APP_PASSWORD:              ${{ secrets.WP_APP_PASSWORD }}
+          GOOGLE_SERVICE_ACCOUNT_JSON:  ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          SERPER_API_KEY:               ${{ secrets.SERPER_API_KEY }}
+          SMTP_HOST:                    ${{ secrets.SMTP_HOST }}
+          SMTP_PORT:                    ${{ secrets.SMTP_PORT }}
+          SMTP_USER:                    ${{ secrets.SMTP_USER }}
+          SMTP_PASS:                    ${{ secrets.SMTP_PASS }}
+          REVIEW_EMAIL:                 ${{ secrets.REVIEW_EMAIL }}
+          GMAIL_CLIENT_ID:              ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET:          ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN:          ${{ secrets.GMAIL_REFRESH_TOKEN }}
+        run: node index.js

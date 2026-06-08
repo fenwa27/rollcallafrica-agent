@@ -1,0 +1,19 @@
+{
+  "name": "rollcallafrica-traffic-agent",
+  "version": "1.2.0",
+  "description": "Social + SEO + Community agent for RollCallAfrica",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "watch": "node --watch index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.0",
+    "google-auth-library": "^9.11.0",
+    "nodemailer": "^6.9.13",
+    "rss-parser": "^3.13.0",
+    "node-fetch": "^3.3.2",
+    "dotenv": "^16.4.5"
+  }
+}

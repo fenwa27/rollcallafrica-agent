@@ -1,0 +1,33 @@
+name: Weekly Content Intelligence Brief
+
+on:
+  schedule:
+    # Monday 7am Lagos time = Monday 6am UTC
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  content-intel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+
+      - name: Run Content Intelligence Agent
+        env:
+          ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
+          SERPER_API_KEY:     ${{ secrets.SERPER_API_KEY }}
+          SITE_NAME:          ${{ secrets.SITE_NAME }}
+          SITE_URL:           ${{ secrets.SITE_URL }}
+          SMTP_HOST:          ${{ secrets.SMTP_HOST }}
+          SMTP_PORT:          ${{ secrets.SMTP_PORT }}
+          SMTP_USER:          ${{ secrets.SMTP_USER }}
+          SMTP_PASS:          ${{ secrets.SMTP_PASS }}
+          REVIEW_EMAIL:       ${{ secrets.REVIEW_EMAIL }}
+        run: node index.js --content-intel
